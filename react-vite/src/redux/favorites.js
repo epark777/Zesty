@@ -1,5 +1,3 @@
-import { act } from "react";
-
 export const ADD_TO_FAVORITES = "favorites/addToFavorites";
 export const REMOVE_FROM_FAVORITES = "favorites/removeFromFavorites";
 export const GET_FAVORITES = "favorites/getFavorites";
@@ -53,8 +51,13 @@ export const addFavorite = (product, user) => async (dispatch) => {
 
 export const removeFavorite = (product, user) => async (dispatch) => {
   try {
-    const response = await fetch(`api/favorites/users/${user.id}/products/${product.id}`)
-    await dispatch(removeFromFavorites(product))
+    const response = await fetch(`api/favorites/users/${user.id}/product/${product.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+    await dispatch(removeFromFavorites(user.id, product))
     return response.json()
   }
   catch (error) {
@@ -67,26 +70,24 @@ const initialState = {};
 
 export default function favoritesReducer(state = initialState, action) {
   switch (action.type) {
-    case GET_FAVORITES:
-      return {...action.payload};
+    case GET_FAVORITES: {
+      const newState = {};
+      action.payload.forEach((favorite) => {
+        newState[favorite.product_id] = favorite;
+      });
+      return newState;
+    }
     case ADD_TO_FAVORITES:
       {
-        const newState = [...state] 
-        newState(action.payload.product_id)
+        const newState = {...state}
+        newState[action.payload.product_id ] = action.payload
         return newState
       }
-    case REMOVE_FROM_FAVORITES:
-    {
-      const newState = state
-
-      for (let a of Object.values(newState)) {
-        console.log(a)
-        if(a === action.payload.product_id) {
-          delete newState[a]
-        }
+      case REMOVE_FROM_FAVORITES: {
+        const newState = { ...state };
+        delete newState[action.payload.product_id];
+        return newState;
       }
-      return newState
-    }
     default:
       return state;
   }

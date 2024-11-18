@@ -6,31 +6,41 @@ import { useEffect, useState } from "react";
 function FavoriteButton({ product }) {
   const user = useSelector((state) => state.session.user)
   const dispatch = useDispatch();
-  const [favorites, setFavorites] = useState([])
-  const isFavorite = favorites.some((fav) => fav.product_id === product.id);
+  const favorites = useSelector((state) => state.favorites);
+  const [fav, setFav] = useState(false)
 
   useEffect(() => {
-    const fetchData = async () => {
-      let res = await dispatch(fetchFavorites(user.id))
-      setFavorites(res)
+    if (user) {
+      dispatch(fetchFavorites(user.id));
     }
-    fetchData()
-  }, [dispatch, user])
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (favorites && favorites[product.id] && (favorites[product.id].user_id == user.id)) {
+      setFav(true);
+    } else {
+      setFav(false);
+    }
+  }, [favorites, product.id, user]);
 
   const handleFavoriteToggle = async () => {
-    if (isFavorite) {
+    if (fav) {
+      console.log("true!")
       await dispatch(removeFromFavorites(product, user)); // Remove from favorites
+      setFav(false)
     } else {
+      console.log("false!")
       await dispatch(addFavorite(product, user)); // Add to favorites
+      setFav(true)
     }
   };
 
   if (user) return (
     <button
       onClick={handleFavoriteToggle}
-      className={`favorite-button ${isFavorite ? "remove-favorite" : "add-favorite"}`}
+      className={`favorite-button ${fav ? "remove-favorite" : "add-favorite"}`}
     >
-      {isFavorite ? "♥ Remove from Favorites" : "♡ Add to Favorites"}
+      {fav ? <p>Remove from favorites</p> : <p>Add to favorites</p>}
     </button>
   );
 }

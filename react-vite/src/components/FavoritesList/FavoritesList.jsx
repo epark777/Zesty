@@ -10,6 +10,7 @@ function FavoritesList() {
   const allProducts = useSelector((state) => state.products);
   const user = useSelector((state) => state.session.user);
 
+
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(fetchFavorites(user.id));

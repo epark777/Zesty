@@ -96,18 +96,23 @@ export const productDelete = (id) => async (dispatch) => {
   }
 };
 
-const initialState = []; 
+const initialState = {};
 
 export default function productsReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_PRODUCTS:
-      return [...action.payload];
+    case FETCH_PRODUCTS: {
+      const newState = { ...state };
+      action.payload.forEach((product) => {
+        newState[product.id] = product;
+      });
+      return newState;
+    }
     case FETCH_PRODUCT_DETAILS:
       return { ...state, detail: action.payload };
     case PRODUCT_DELETE: {
       const newState = { ...state };
       delete newState[action.payload.product_id];
-      return newState
+      return newState;
     }
     case PRODUCT_EDIT: {
       const newState = { ...state };
