@@ -21,6 +21,10 @@ function ProductDetail() {
       fetchData()
   })
 
+  const handleCart = async () => {
+    await dispatch(addToCart(product))
+  }
+
 
 try {
   return (
@@ -31,7 +35,7 @@ try {
         <p className="detail-category">{product.category}</p>
         <p className="detail-price">${product.price}</p>
         <p className="detail-description">{product.description}</p>
-        <button onClick={() => dispatch(addToCart(product))} className="add-to-cart-button">
+        <button onClick={() => handleCart} className="add-to-cart-button">
           Add to Cart
         </button>
         <FavoriteButton product={product} />
