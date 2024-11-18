@@ -1,48 +1,64 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addFavorite, fetchFavorites, removeFromFavorites } from "../../redux/favorites";
+import {
+  addFavorite,
+  removeFavorite,
+} from "../../redux/favorites";
 import "./Favorites.css";
 import { useEffect, useState } from "react";
 
 function FavoriteButton({ product }) {
-  const user = useSelector((state) => state.session.user)
+  const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
-  const favorites = useSelector((state) => state.favorites);
-  const [fav, setFav] = useState(false)
-
+  const [fav, setFav] = useState();
+  
   useEffect(() => {
-    if (user) {
-      dispatch(fetchFavorites(user.id, product.id));
-    }
-  }, [dispatch, user, product]);
+    const checkIfFavorite = async () => {
+      if (user && product) {
+        try {
+          const response = await fetch(
+            `/api/favorites/users/${user.id}/products/${product.id}`
+          );
+          const data = await response.json();
+          if (data.length > 0) {
+            setFav(true);
+          } else {
+            setFav(false);
+          }
+        } catch (error) {
+          console.error("Error checking favorite status:", error);
+        }
+      }
+    };
 
-  useEffect(() => {
-    if (favorites && favorites[product.id] && (favorites[product.id].user_id == user.id)) {
-      setFav(true);
-    } else {
-      setFav(false);
-    }
-  }, [favorites, product.id, user]);
+    checkIfFavorite();
+  }, [user, product]);
+ 
 
   const handleFavoriteToggle = async () => {
     if (fav) {
-      console.log("true!")
-      await dispatch(removeFromFavorites(product, user)); // Remove from favorites
-      setFav(false)
+      const response = await dispatch(removeFavorite(product, user));
+      if (response.message === "deleted") {
+        setFav(false);
+      }
     } else {
-      console.log("false!")
-      await dispatch(addFavorite(product, user)); // Add to favorites
-      setFav(true)
+      const response = await dispatch(addFavorite(product, user));
+      if (response.message === "created") {
+        setFav(true);
+      }
     }
   };
 
-  if (user) return (
-    <button
-      onClick={handleFavoriteToggle}
-      className={`favorite-button ${fav ? "remove-favorite" : "add-favorite"}`}
-    >
-      {fav ? <p>Remove from favorites</p> : <p>Add to favorites</p>}
-    </button>
-  );
+  if (user)
+    return (
+      <button
+        onClick={handleFavoriteToggle}
+        className={`favorite-button ${
+          fav ? "remove-favorite" : "add-favorite"
+        }`}
+      >
+        {fav ? <p>Remove from favorites</p> : <p>Add to favorites</p>}
+      </button>
+    );
 }
 
 export default FavoriteButton;

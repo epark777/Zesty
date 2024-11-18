@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFavorites } from "../../redux/favorites";
 import FavoriteButton from "./FavoriteButton";
@@ -6,14 +6,15 @@ import "./Favorites.css";
 
 function FavoritesList() {
   const dispatch = useDispatch();
-  const favorites = useSelector((state) => Object.values(state.favorites))
+  const [favorites, setFavorites] = useState([])
   const allProducts = useSelector((state) => state.products);
   const user = useSelector((state) => state.session.user);
 
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchFavorites(user.id));
+      let data = await dispatch(fetchFavorites(user.id));
+      await setFavorites(data)
     };
     fetchData();
   }, [dispatch, user]);

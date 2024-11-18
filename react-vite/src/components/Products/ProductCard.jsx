@@ -1,5 +1,5 @@
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/cart";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartThunk } from "../../redux/cart";
 import { useNavigate } from "react-router-dom";
 import { fetchProductDetails } from "../../redux/products"; // Assuming you have a thunk for fetching details
 import "./Product.css";
@@ -7,11 +7,12 @@ import "./Product.css";
 function ProductCard({ product }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.session.user)
   console.log(product);
 
   const handleAddToCart = () => {
     const fetchData = async () => {
-      await dispatch(addToCart(product));
+      await dispatch(addToCartThunk(product, user));
     };
     fetchData();
   };

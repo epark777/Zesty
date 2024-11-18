@@ -1,22 +1,31 @@
-import { useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../../redux/cart";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFromCartThunk, updateQuantityThunk } from "../../redux/cart"; // Import thunks
 import "./Cart.css";
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.session.user)
 
   const handleRemove = () => {
-    dispatch(removeFromCart(item.id)); // Remove item from cart
+    const fetchData = async () => {
+      console.log(item)
+      await dispatch(removeFromCartThunk(item.id, user.id)); // Remove item from cart using thunk
+    }
+    fetchData()
   };
 
   const handleQuantityChange = (e) => {
+    const fetchData = async () => {
     const newQuantity = parseInt(e.target.value, 10);
-    dispatch(updateQuantity(item.id, newQuantity)); // Update quantity
+    if (newQuantity > 0) {
+      await dispatch(updateQuantityThunk(item.id, newQuantity)); // Update quantity using thunk
+    }
+  }
+  fetchData()
   };
 
   return (
     <div className="cart-item">
-      <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
       <div className="cart-item-details">
         <h3 className="cart-item-name">{item.name}</h3>
         <p className="cart-item-price">${item.price}</p>
@@ -25,7 +34,7 @@ function CartItem({ item }) {
           <input
             type="number"
             min="1"
-            value={item.quantity}
+            value={item.quantity || 1}
             onChange={handleQuantityChange}
             className="quantity-input"
           />
