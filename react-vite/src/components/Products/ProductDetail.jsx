@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useParams } from "react-router-dom";
 import { addToCart } from "../../redux/cart";
 import "./Product.css";
 import ReviewList from "../ReviewList/ReviewList";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProductDetails } from "../../redux/products";
 import FavoriteButton from "../FavoritesList/FavoriteButton";
@@ -11,21 +11,19 @@ import FavoriteButton from "../FavoritesList/FavoriteButton";
 function ProductDetail() {
   let id = useParams()
   id = id.productId
-  const [product, setProduct] = useState({})
-  console.log(product)
+  const product = useSelector((state) => state.products.detail)
   const dispatch = useDispatch();
   
   useEffect(() => {
       const fetchData = async () => {
-        let data = await dispatch(fetchProductDetails(id))
-        setProduct(data)
+        if (!product) await dispatch(fetchProductDetails(id))
       }
       fetchData()
-  }, [dispatch, id, setProduct])
+  })
 
 
 try {
-  if (product.id) return (
+  return (
     <div className="product-detail">
       <img src={product.imageUrl} alt={product.name} className="detail-image" />
       <div className="detail-info">
@@ -40,8 +38,7 @@ try {
       </div>
       <ReviewList productId={id}/>
     </div>
-  )
-  else return <h1>nothing</h1>
+  ) || <h1>nothing</h1>
   
 } catch (error) {
   return <h1></h1>

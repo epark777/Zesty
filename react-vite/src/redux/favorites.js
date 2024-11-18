@@ -18,9 +18,16 @@ export const getFavorites = (favorites) => ({
   payload: favorites,
 });
 
-// Thunk for fetching favorites from backend
 export const fetchFavorites = (owner_id) => async (dispatch) => {
-  const response = await fetch(`/api/favorites/users/${owner_id}`);
+  const response = await fetch(`/api/favorites/users/${owner_id}/`);
+  const data = await response.json();
+  await dispatch(getFavorites(data));
+  return data
+};
+
+// Thunk for fetching favorites from backend
+export const fetchFavoritesId = (owner_id, product_id) => async (dispatch) => {
+  const response = await fetch(`/api/favorites/users/${owner_id}/product/${product_id}`);
   const data = await response.json();
   await dispatch(getFavorites(data));
   return data

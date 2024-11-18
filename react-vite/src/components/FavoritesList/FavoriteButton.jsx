@@ -11,9 +11,9 @@ function FavoriteButton({ product }) {
 
   useEffect(() => {
     if (user) {
-      dispatch(fetchFavorites(user.id));
+      dispatch(fetchFavorites(user.id, product.id));
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, product]);
 
   useEffect(() => {
     if (favorites && favorites[product.id] && (favorites[product.id].user_id == user.id)) {

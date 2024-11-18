@@ -19,8 +19,21 @@ def add_to_favorites(user_id):
     db.session.commit()
     return jsonify(new_favorite.to_dict_basic()), 201
 
+@favorites_bp.route('/users/<int:user_id>', methods=['GET'])
+def get_favorites(user_id):
+    favorites = Favorite.query.filter_by(user_id=user_id).all()
+    favorite_products = []
+    for fav in favorites:
+        product = Product.query.get(fav.product_id)
+        if product:
+            favorite_products.append({
+                "product_id": product.id,
+                "user_id": user_id
+            })
+    return jsonify(favorite_products)
+
 @favorites_bp.route('/users/<int:user_id>/products/<int:product_id>', methods=['GET'])
-def get_favorites(user_id, product_id):
+def get_product_favorites(user_id, product_id):
     favorites = Favorite.query.filter_by(user_id=user_id, product_id=product_id).all()
     favorite_products = []
     for fav in favorites:
