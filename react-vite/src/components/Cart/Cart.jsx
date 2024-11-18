@@ -33,10 +33,15 @@ function Cart() {
     fetchData()
   }, [dispatch, user])
 
+  const handleCheckout = () => {
+    alert("Checkout successful! Thank you for your purchase.");
+  };
+
   if (cart.length === 0) {
     return <p className="empty-cart">Your cart is empty.</p>;
   }
 
+  const total = cart.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <div className="cart-container">
@@ -46,7 +51,10 @@ function Cart() {
           <CartItem key={item} item={item} />
         ))}
       </div>
-      <button className="checkout-button">Proceed to Checkout</button>
+      <div className="cart-total">
+        <p>Total: ${total.toFixed(2)}</p>
+      </div>
+      <button onClick={() => handleCheckout} className="checkout-button">Proceed to Checkout</button>
     </div>
   );
 }

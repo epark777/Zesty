@@ -20,7 +20,9 @@ class ShoppingCart(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "product_id": self.product_id
+            "product_id": self.product_id,
+            "name": self.product.name,
+            "price": self.product.price
         }
     
     def to_dict(self):
@@ -28,5 +30,3 @@ class ShoppingCart(db.Model):
             **self.to_dict_basic(),
             "cart_items": [cartItem.to_dict_basic() for cartItem in self.cart_items]
         }
-
-
