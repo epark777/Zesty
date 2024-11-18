@@ -18,7 +18,7 @@ export const ManageProducts = () => {
     fetchData()
   }, [dispatch, setProducts]);
 
-  if (user) return (
+  if (user && products.length > 0) return (
     <div className="product-list">
       {products.map((product) => {
       if (product.owner_id == user) return (

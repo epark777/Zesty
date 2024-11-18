@@ -32,15 +32,15 @@ function FavoritesList() {
 
   let favoriteValues = []
     for (let a of favorites) {
-      favoriteValues.push(a.product_id)
+      favoriteValues.push(a)
     }
   
 
   const filteredProducts = products.filter((product) =>
-    Object.values(favoriteValues).includes(product.id)
+    favoriteValues.includes(product.id)
   );
 
-  console.log(filteredProducts, allProducts, favoriteValues)
+  console.log(filteredProducts, products, favoriteValues)
 
 
   return (
