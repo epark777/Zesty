@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchReviews, updateReview, removeReview } from "../../redux/reviews";
 import "./Reviews.css";
 
+
 function ReviewItem({ review, productId }) {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
@@ -13,11 +14,12 @@ function ReviewItem({ review, productId }) {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    const updatedReview = { review: editReview, rating: editRating };
+    const updatedReview = { review: editReview, rating: editRating, id: review.id };
     try {
-      await dispatch(updateReview(productId, review.id, updatedReview));
-      await dispatch(fetchReviews(productId)); // Refresh reviews
+      await dispatch(updateReview(updatedReview));
+      await dispatch(fetchReviews(productId));
       setIsEditing(false);
+
     } catch (err) {
       console.error("Failed to update review:", err);
     }
@@ -25,8 +27,9 @@ function ReviewItem({ review, productId }) {
 
   const handleDelete = async () => {
     try {
-      await dispatch(removeReview(review.id)); // Delete using review_id
-      await dispatch(fetchReviews(productId)); // Refresh reviews
+      await dispatch(removeReview(review.id));
+      await dispatch(fetchReviews(productId));
+
     } catch (err) {
       console.error("Failed to delete review:", err);
     }

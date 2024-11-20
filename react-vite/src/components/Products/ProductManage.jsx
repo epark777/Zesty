@@ -26,6 +26,6 @@ export const ManageProducts = () => {
       )})}
     </div>
   ) || <h1>Loading...</h1>
-  else return <h1>Not logged in</h1>
+  else if (products.length < 1) return <h1>No products</h1>
 
 }

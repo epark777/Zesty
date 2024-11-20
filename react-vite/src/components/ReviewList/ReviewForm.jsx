@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchReviews, postReview } from "../../redux/reviews";
 import "./Reviews.css";
 
+
 function ReviewForm({ productId }) {
+
 
   const userId = useSelector((state) => state.session.user.id)
 
@@ -19,6 +21,7 @@ function ReviewForm({ productId }) {
     await dispatch(fetchReviews(productId))
     setReview("");
     setRating(1);
+
   };
 
   return (

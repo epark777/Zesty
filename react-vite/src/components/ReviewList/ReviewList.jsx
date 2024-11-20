@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchReviews } from "../../redux/reviews"; // Assuming you have a fetchReviews thunk
 import ReviewItem from "./ReviewItem";
@@ -9,13 +9,18 @@ function ReviewList({ productId }) {
   console.log(productId)
   const user = useSelector((state) => state.session.user)
   const dispatch = useDispatch();
-  const reviews = useSelector((state) => state.reviews[productId] || []);
+  const [reviews, setReviews] = useState([])
 
   useEffect(() => {
-    dispatch(fetchReviews(productId)); // Fetch reviews for the product
+    const fetchdata = async () => {
+      let data = await dispatch(fetchReviews(productId));
+      console.log(data)
+      if (data && Array.isArray(data)) setReviews(data)
+    }
+    fetchdata()
   }, [dispatch, productId]);
 
-  try {
+
     return (
       <div className="review-list">
         <h3 className="review-list-title">Customer Reviews</h3>
@@ -30,9 +35,6 @@ function ReviewList({ productId }) {
         
       </div>
     );
-  } catch (error) {
-    return <h1></h1>
   }
-}
 
 export default ReviewList;

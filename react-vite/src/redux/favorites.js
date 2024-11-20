@@ -11,7 +11,7 @@ export const addToFavorites = (product) => ({
 
 export const removeFromFavorites = (product, user) => ({
   type: REMOVE_FROM_FAVORITES,
-  payload: {id: product, user_id: user},
+  payload: {name: product.name, user_id: user},
 });
 
 export const getFavorites = (favorites) => ({
@@ -19,23 +19,11 @@ export const getFavorites = (favorites) => ({
   payload: favorites,
 });
 
-export const getFavoritesId = (favorites) => ({
-  type: GET_FAVORITES_ID,
-  payload: favorites,
-});
 
 export const fetchFavorites = (owner_id) => async (dispatch) => {
-  const response = await fetch(`/api/favorites/users/${owner_id}/`);
+  const response = await fetch(`/api/favorites/users/${owner_id}`);
   const data = await response.json();
-  await dispatch(getFavorites(data));
-  
-};
-
-// Thunk for fetching favorites from backend
-export const fetchFavoritesId = (owner_id, id) => async (dispatch) => {
-  const response = await fetch(`/api/favorites/users/${owner_id}/product/${id}`);
-  const data = await response.json();
-  await dispatch(getFavorites(data));
+  if (data.length > 0) await dispatch(getFavorites(data));
   return data
 };
 
@@ -67,13 +55,13 @@ export const addFavorite = (product, user) => async (dispatch) => {
 
 export const removeFavorite = (product, user) => async (dispatch) => {
   try {
-    await fetch(`/api/favorites/users/${user.id}/${product.id}`, {
+    await fetch(`/api/favorites/users/${user.id}/${product.name}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       }
     })
-    await dispatch(removeFromFavorites(product.id, user.id))
+    await dispatch(removeFromFavorites(product.id, user.name))
     return {"message": "deleted"}
   }
   catch (error) {

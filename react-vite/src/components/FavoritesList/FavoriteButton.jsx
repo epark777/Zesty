@@ -6,20 +6,21 @@ import {
 import "./Favorites.css";
 import { useEffect, useState } from "react";
 
-function FavoriteButton({ product, context=false }) {
+function FavoriteButton({ product }) {
   const user = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
-  const [fav, setFav] = useState(context);
+  const [fav, setFav] = useState(false);
   
   useEffect(() => {
     const checkIfFavorite = async () => {
       if (user && product) {
         try {
           const response = await fetch(
-            `/api/favorites/users/${user.id}/${product.id}`
+            `/api/favorites/users/${user.id}/${product.name}`
           );
           const data = await response.json();
-          if (data.length > 0) {
+          console.log(data)
+          if (data.name === product.name) {
             setFav(true);
           } else {
             setFav(false);
@@ -36,6 +37,7 @@ function FavoriteButton({ product, context=false }) {
 
   const handleFavoriteToggle = async () => {
     if (fav) {
+      console.log(product)
       const response = await dispatch(removeFavorite(product, user));
       if (response.message === "deleted") {
         setFav(false);

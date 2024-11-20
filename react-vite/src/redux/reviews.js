@@ -1,6 +1,7 @@
 // src/redux/reviews.js
 export const SET_REVIEWS = "reviews/setReviews";
 export const ADD_REVIEW = "reviews/addReview";
+export const UPDATE_REVIEW = "reviews/editReview";
 export const DELETE_REVIEW = "reviews/deleteReview";
 
 export const setReviews = (reviews, productId) => ({
@@ -10,6 +11,11 @@ export const setReviews = (reviews, productId) => ({
 
 export const addReview = (review) => ({
   type: ADD_REVIEW,
+  payload: review,
+});
+
+export const editReview = (review) => ({
+  type: UPDATE_REVIEW,
   payload: review,
 });
 
@@ -23,6 +29,7 @@ export const fetchReviews = (productId) => async (dispatch) => {
   const response = await fetch(`/api/reviews/${productId}`);
   const data = await response.json();
   dispatch(setReviews(data, productId));
+  return data
 };
 
 export const postReview = (review) => async (dispatch) => {
@@ -53,10 +60,7 @@ export const updateReview = (review) => async (dispatch) => {
 
   if (response.ok) {
     const updatedReview = await response.json();
-    dispatch({
-      type: "UPDATE_REVIEW",
-      payload: updatedReview,
-    });
+    await dispatch(editReview(updatedReview))
   }
 };
 
@@ -69,6 +73,14 @@ export default function reviewsReducer(state = initialState, action) {
     case SET_REVIEWS:
       return { ...state, [action.payload.productId]: action.payload.reviews };
     case ADD_REVIEW:
+      return {
+        ...state,
+        [action.payload.productId]: [
+          ...(state[action.payload.productId] || []),
+          action.payload,
+        ],
+      };
+      case UPDATE_REVIEW:
       return {
         ...state,
         [action.payload.productId]: [

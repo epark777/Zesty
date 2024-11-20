@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from app.models import Review, db
 
 
-reviews_bp = Blueprint('reviews', __name__, url_prefix='/products/<int:product_id>/reviews')
+reviews_bp = Blueprint('reviews', __name__, url_prefix='/reviews')
 
 @reviews_bp.route('/<int:product_id>', methods=['POST'])
 def add_review(product_id):
@@ -42,10 +42,10 @@ def get_reviews(product_id):
     } for r in reviews])
 
 @reviews_bp.route('/<int:review_id>', methods=['PUT'])
-def update_review(product_id, review_id):
+def update_review(review_id):
     data = request.get_json()
 
-    review = Review.query.filter_by(id=review_id, product_id=product_id).first()
+    review = Review.query.filter_by(id=review_id).first()
     
     if not review:
         return jsonify({"message": "Review not found"}), 404
