@@ -72,4 +72,10 @@ def upgrade():
         sa.ForeignKeyConstraint(['user_id'], ['users.id']),
         sa.PrimaryKeyConstraint('id')
     )
-    # ### end Alembic commands ###
+
+def downgrade():
+
+    op.drop_table('shopping_cart')
+    op.drop_table('reviews')
+    op.drop_table('favorites')
+    op.drop_table('products')
