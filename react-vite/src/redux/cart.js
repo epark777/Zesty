@@ -119,22 +119,6 @@ export const clearCartThunk = (userId) => async (dispatch) => {
   }
 };
 
-export const checkoutCartThunk = (userId) => async (dispatch) => {
-  try {
-    const res = await fetch(`/api/users/${userId}/checkout`, {
-      method: "POST",
-    });
-
-    if (!res.ok) throw new Error("Failed to checkout");
-
-    const data = await res.json();
-    await dispatch(clearCart());
-    return data;
-  } catch (error) {
-    console.error("Error during checkout:", error);
-    throw error;
-  }
-};
 
 const initialState = {};
 
