@@ -39,13 +39,15 @@ function FavoriteButton({ product }) {
     if (fav) {
       console.log(product)
       const response = await dispatch(removeFavorite(product, user));
-      if (await response.message === "deleted") {
+      let res = await response
+      if (res.message === "deleted") {
         setFav(false);
       }
     } else {
       console.log(product)
       const response = await dispatch(addFavorite(product, user));
-      if (await response.message === "created") {
+      let res = await response
+      if (res.message === "created") {
         setFav(true);
       }
     }
