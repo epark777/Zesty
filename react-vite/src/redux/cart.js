@@ -107,7 +107,7 @@ export const updateQuantityThunk = (productId, quantity, userId) => async (dispa
 
 export const clearCartThunk = (userId) => async (dispatch) => {
   try {
-    const res = await fetch(`/api/users/${userId}/cart/clear`, {
+    const res = await fetch(`/api/cart/users/${userId}/checkout`, {
       method: "POST",
     });
 
