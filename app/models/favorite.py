@@ -8,7 +8,7 @@ class Favorite(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.BigInteger, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     name = db.Column(db.Text, nullable=False)
     category = db.Column(db.Text, nullable=True)
     description = db.Column(db.Text, nullable=True)
