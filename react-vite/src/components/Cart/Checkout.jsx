@@ -1,14 +1,18 @@
 import { useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom"
 import "./Cart.css";
 
 function Checkout() {
-
+  const navigate = useNavigate()
   const cartItems = useSelector((state) => state.cart);
-  const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  const totalAmount = cartItems
+    .reduce((total, item) => total + item.price * item.quantity, 0)
+    .toFixed(2);
 
-  const handleCheckout = async () => {
-      alert("Thank you for your purchase!");
-}
+  const handleCheckout = () => {
+    navigate('/cart/purchased');
+  }
+
   return (
     <div className="checkout-container">
       <h2 className="checkout-title">Order Summary</h2>
@@ -20,10 +24,11 @@ function Checkout() {
         ))}
       </ul>
       <div className="checkout-total">Total: ${totalAmount}</div>
-      <button onClick={handleCheckout} className="confirm-checkout-button">Confirm Purchase</button>
+      <button onClick={handleCheckout} className="confirm-checkout-button">
+        Confirm Purchase
+      </button>
     </div>
   );
-  
 }
 
 export default Checkout;

@@ -100,3 +100,7 @@
   .checkout-button:hover, .confirm-checkout-button:hover {
     background-color: #0056b3;
   }
+
+  .purchased {
+    text-align: center;
+  }

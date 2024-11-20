@@ -10,6 +10,7 @@ import FavoritesList from '../components/FavoritesList/FavoritesList'; // Import
 import ReviewList from '../components/ReviewList/ReviewList'; // Importing ReviewList
 import Cart from '../components/Cart/Cart';
 import {ManageProducts} from '../components/Products/ProductManage';
+import { CartPurchase } from '../components/Cart/CartPurchase';
 
 
 export const router = createBrowserRouter([
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "cart",
         element: <Cart />,
+      },
+      {
+        path: "cart/purchased",
+        element: <CartPurchase />,
       },
       {
         path: "user/products",
