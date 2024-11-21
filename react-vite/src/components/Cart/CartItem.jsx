@@ -11,7 +11,7 @@ function CartItem({ item }) {
 
   const handleRemove = async () => {
     console.log(item);
-    await dispatch(removeFromCartThunk(item.id, user.id)); // Remove item from cart using thunk
+    await dispatch(removeFromCartThunk(item.id, user.id));
   };
 
   const handleQuantityChange = async (e) => {

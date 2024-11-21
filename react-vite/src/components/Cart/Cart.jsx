@@ -18,7 +18,7 @@ function Cart() {
       setCart(data)
     };
     fetchData();
-  }, [dispatch, user]);
+  }, [dispatch, user, cart]);
 
   const handleCheckout = async (e) => {
     e.preventDefault();

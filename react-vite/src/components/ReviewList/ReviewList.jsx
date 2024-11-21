@@ -14,11 +14,10 @@ function ReviewList({ productId }) {
   useEffect(() => {
     const fetchdata = async () => {
       let data = await dispatch(fetchReviews(productId));
-      console.log(data)
       if (data && Array.isArray(data)) setReviews(data)
     }
     fetchdata()
-  }, [dispatch, productId]);
+  }, [dispatch, productId, reviews]);
 
 
     return (

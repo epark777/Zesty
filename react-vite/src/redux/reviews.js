@@ -40,6 +40,7 @@ export const postReview = (review) => async (dispatch) => {
   });
   const data = await response.json();
   await dispatch(addReview(data));
+  return
 };
 
 export const removeReview = (reviewId) => async (dispatch) => {
@@ -47,6 +48,7 @@ export const removeReview = (reviewId) => async (dispatch) => {
     method: "DELETE",
   });
   await dispatch(deleteReview(reviewId));
+  return
 };
 
 export const updateReview = (review) => async (dispatch) => {
@@ -62,6 +64,7 @@ export const updateReview = (review) => async (dispatch) => {
     const updatedReview = await response.json();
     await dispatch(editReview(updatedReview))
   }
+  return
 };
 
 
