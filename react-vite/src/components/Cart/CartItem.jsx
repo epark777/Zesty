@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCartThunk, updateQuantityThunk } from "../../redux/cart"; // Import thunks
+import { removeFromCartThunk } from "../../redux/cart"; // Import thunks
+import { updateProduct } from "../../redux/products" // Import thunks
 import "./Cart.css";
 
 function CartItem({ item }) {
@@ -18,7 +19,7 @@ function CartItem({ item }) {
     const fetchData = async () => {
     const newQuantity = parseInt(e.target.value, 10);
     if (newQuantity > 0) {
-      await dispatch(updateQuantityThunk(item.id, newQuantity, user.id)); // Update quantity using thunk
+      await dispatch(productEdit({quantity: newQuantity, id: item.id}))
     }
   }
   fetchData()
