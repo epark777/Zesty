@@ -11,6 +11,7 @@ function CartItem({ item }) {
 
   const handleRemove = async () => {
     console.log(item);
+    setQuantity(1)
     await dispatch(removeFromCartThunk(item.id, user.id));
   };
 
