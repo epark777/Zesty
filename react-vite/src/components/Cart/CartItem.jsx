@@ -1,27 +1,38 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCartThunk, updateQuantityThunk } from "../../redux/cart"; // Import thunks
+import { removeFromCartThunk, updateQuantityThunk } from "../../redux/cart";
 import "./Cart.css";
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.session.user)
+  const user = useSelector((state) => state.session.user);
 
-  const handleRemove = () => {
-    const fetchData = async () => {
-      console.log(item)
-      await dispatch(removeFromCartThunk(item.id, user.id)); // Remove item from cart using thunk
+  const handleRemove = async () => {
+    if (!user) {
+      console.error("User not logged in.");
+      return;
     }
-    fetchData()
+
+    try {
+      console.log(item);
+      await dispatch(removeFromCartThunk(item.id, user.id));
+    } catch (error) {
+      console.error("Failed to remove item from cart:", error);
+    }
   };
 
-  const handleQuantityChange = (e) => {
-    const fetchData = async () => {
-    const newQuantity = parseInt(e.target.value, 10);
-    if (newQuantity > 0) {
-      await dispatch(updateQuantityThunk(item.id, newQuantity)); // Update quantity using thunk
+  const handleQuantityChange = async (e) => {
+    const value = e.target.value;
+    const newQuantity = parseInt(value, 10);
+
+    if (isNaN(newQuantity) || newQuantity < 1) {
+      return; // Optionally, show an error or reset the input
     }
-  }
-  fetchData()
+
+    try {
+      await dispatch(updateQuantityThunk(item.id, newQuantity));
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+    }
   };
 
   return (
@@ -34,7 +45,7 @@ function CartItem({ item }) {
           <input
             type="number"
             min="1"
-            value={item.quantity || 1}
+            value={item.quantity !== undefined ? item.quantity : 1}
             onChange={handleQuantityChange}
             className="quantity-input"
           />

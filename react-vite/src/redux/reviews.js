@@ -25,11 +25,14 @@ export const deleteReview = (reviewId) => ({
 });
 
 // Thunks
-export const fetchReviews = (productId) => async (dispatch) => {
+export const fetchReviews = (productId) => async (dispatch, getState) => {
   const response = await fetch(`/api/reviews/${productId}`);
   const data = await response.json();
-  dispatch(setReviews(data, productId));
-  return data
+
+  const currentReviews = getState().reviews[productId];
+  if (JSON.stringify(currentReviews) !== JSON.stringify(data)) {
+    dispatch(setReviews(data, productId)); // Only dispatch if reviews have changed
+  }
 };
 
 export const postReview = (review) => async (dispatch) => {
@@ -66,33 +69,44 @@ export const updateReview = (review) => async (dispatch) => {
 
 
 
+
 const initialState = {};
 
 export default function reviewsReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_REVIEWS:
+    case SET_REVIEWS: {
+      if (JSON.stringify(state[action.payload.productId]) === JSON.stringify(action.payload.reviews)) {
+        return state;
+      }
       return { ...state, [action.payload.productId]: action.payload.reviews };
-    case ADD_REVIEW:
+    }
+
+    case ADD_REVIEW: {
+      const productId = action.payload.productId;
       return {
         ...state,
-        [action.payload.productId]: [
-          ...(state[action.payload.productId] || []),
-          action.payload,
-        ],
+        [productId]: [...(state[productId] || []), action.payload],
       };
-      case UPDATE_REVIEW:
+    }
+
+    case UPDATE_REVIEW: {
+      const productId = action.payload.productId;
       return {
         ...state,
-        [action.payload.productId]: [
-          ...(state[action.payload.productId] || []),
-          action.payload,
-        ],
+        [productId]: (state[productId] || []).map((review) =>
+          review.id === action.payload.id ? action.payload : review
+        ),
       };
-    case DELETE_REVIEW:
-      delete state[action.payload.productId]
+    }
+
+    case DELETE_REVIEW: {
+      const { reviewId, productId } = action.payload;
       return {
         ...state,
+        [productId]: (state[productId] || []).filter((review) => review.id !== reviewId),
       };
+    }
+
     default:
       return state;
   }

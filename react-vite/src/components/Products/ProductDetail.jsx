@@ -15,7 +15,7 @@ function ProductDetail() {
   const user = useSelector((state) => state.session.user)
   const dispatch = useDispatch();
   const [favorites, setFavorites] = useState([])
-  
+
   useEffect(() => {
       const fetchData = async () => {
         if (!product) await dispatch(fetchProductDetails(id))
@@ -37,6 +37,7 @@ function ProductDetail() {
 
 try {
   return (
+    <>
     <div className="product-detail">
       <img src={product.imageUrl} alt={product.name} className="detail-image" />
       <div className="detail-info">
@@ -46,10 +47,11 @@ try {
         <p className="detail-description">{product.description}</p>
         <FavoriteButton product={product} favorites={favorites} />
       </div>
-      <ReviewList productId={id}/>
     </div>
+    <ReviewList productId={id}/>
+    </>
   ) || <h1>nothing</h1>
-  
+
 } catch (error) {
   return <h1></h1>
 }

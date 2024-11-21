@@ -21,7 +21,7 @@ function ProductOwnerCard({ product }) {
 
       if (response.ok) {
         console.log("Product deleted successfully");
-        navigate(`api/`); // Redirect to the owner's product list
+        navigate(`/`); // Redirect to the owner's product list
       } else {
         console.error("Failed to delete product");
       }
