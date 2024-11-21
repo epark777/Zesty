@@ -1,28 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCartThunk } from "../../redux/cart"; // Import thunks
-import { updateProduct } from "../../redux/products" // Import thunks
+import { productEdit } from "../../redux/products"; // Import thunks
+import { useState } from "react";
 import "./Cart.css";
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.session.user)
+  const user = useSelector((state) => state.session.user);
+  const [quantity, setQuantity] = useState(item.quantity)
 
-  const handleRemove = () => {
-    const fetchData = async () => {
-      console.log(item)
-      await dispatch(removeFromCartThunk(item.id, user.id)); // Remove item from cart using thunk
-    }
-    fetchData()
+  const handleRemove = async () => {
+    console.log(item);
+    await dispatch(removeFromCartThunk(item.id, user.id)); // Remove item from cart using thunk
   };
 
-  const handleQuantityChange = (e) => {
-    const fetchData = async () => {
+  const handleQuantityChange = async (e) => {
     const newQuantity = parseInt(e.target.value, 10);
     if (newQuantity > 0) {
-      await dispatch(productEdit({quantity: newQuantity, id: item.id}))
+      await dispatch(productEdit({ quantity: newQuantity, id: item.id, price: item.price, name: item.name }));
     }
-  }
-  fetchData()
+    setQuantity(newQuantity)
   };
 
   return (
@@ -35,12 +32,14 @@ function CartItem({ item }) {
           <input
             type="number"
             min="1"
-            value={item.quantity || 1}
+            value={quantity}
             onChange={handleQuantityChange}
             className="quantity-input"
           />
         </label>
-        <button onClick={handleRemove} className="remove-button">Remove</button>
+        <button onClick={handleRemove} className="remove-button">
+          Remove
+        </button>
       </div>
     </div>
   );

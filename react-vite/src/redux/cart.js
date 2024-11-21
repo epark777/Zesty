@@ -35,14 +35,24 @@ export const fetchCartItemsThunk = (userId) => async (dispatch) => {
 
     await dispatch(clearCart());
 
+    let cart = [];
     data.forEach((item) => {
-      dispatch(addToCart({
+      dispatch(
+        addToCart({
+          id: item.product_id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity || 1,
+        })
+      );
+      cart.push({
         id: item.product_id,
         name: item.name,
         price: item.price,
-        quantity: item.quantity_in_cart || 1,
-      }));
+        quantity: item.quantity || 1,
+      });
     });
+    return cart
   } catch (error) {
     console.error("Error fetching cart items:", error);
   }
@@ -50,25 +60,30 @@ export const fetchCartItemsThunk = (userId) => async (dispatch) => {
 
 export const addToCartThunk = (product, user) => async (dispatch) => {
   try {
-    const res = await fetch(`/api/cart/users/${user.id}/products/${product.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product),
-    });
+    const res = await fetch(
+      `/api/cart/users/${user.id}/products/${product.id}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      }
+    );
 
-    console.log(res)
+    console.log(res);
 
     if (!res.ok) throw new Error("Failed to add item to cart");
-    else console.log(res)
+    else console.log(res);
 
     const data = await res.json();
 
-    await dispatch(addToCart({
-      id: data.product_id,
-      name: data.name,
-      price: data.price,
-      quantity: 1,
-    }));
+    await dispatch(
+      addToCart({
+        id: data.product_id,
+        name: data.name,
+        price: data.price,
+        quantity: 1,
+      })
+    );
   } catch (error) {
     console.error("Error adding item to cart:", error);
   }
@@ -88,7 +103,6 @@ export const removeFromCartThunk = (product, userId) => async (dispatch) => {
   }
 };
 
-
 export const clearCartThunk = (userId) => async (dispatch) => {
   try {
     const res = await fetch(`/api/cart/users/${userId}/checkout`, {
@@ -102,7 +116,6 @@ export const clearCartThunk = (userId) => async (dispatch) => {
     console.error("Error clearing the cart:", error);
   }
 };
-
 
 const initialState = {};
 
@@ -155,4 +168,3 @@ export default function cartReducer(state = initialState, action) {
       return state;
   }
 }
-

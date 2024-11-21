@@ -45,7 +45,8 @@ def get_cart(user_id):
                 "user_id": product.owner_id,
                 "product_id": product.id,
                 "name": product.name,
-                "price": product.price
+                "price": product.price,
+                "quantity": product.quantity
             })
         else:
            

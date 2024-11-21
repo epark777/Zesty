@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import "./Cart.css";
 import { clearCartThunk, fetchCartItemsThunk } from "../../redux/cart";
@@ -9,26 +9,13 @@ function Cart() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
-  const cart = useSelector((state) => Object.values(state.cart));
+  const [cart, setCart] = useState([])
 
-  useEffect(() => {
-    const checkCart = async () => {
-      if (user && cart.length < 1) {
-        try {
-          const response = await fetch(`/api/cart/users/${user.id}`);
-          await response.json();
-        } catch (error) {
-          console.error("Error checking favorite status:", error);
-        }
-      }
-    };
-
-    checkCart();
-  }, [user, cart]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchCartItemsThunk(user.id));
+      let data = await dispatch(fetchCartItemsThunk(user.id));
+      setCart(data)
     };
     fetchData();
   }, [dispatch, user]);
@@ -50,7 +37,7 @@ function Cart() {
       <h2 className="cart-title">Shopping Cart</h2>
       <div className="cart-items">
         {cart.map((item) => (
-          <CartItem key={item} item={item} />
+          <CartItem key={item.id} item={item} />
         ))}
       </div>
       <div className="cart-total">

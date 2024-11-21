@@ -50,7 +50,7 @@ export const productCreate = (product) => async (dispatch) => {
   }
 };
 
-export const productEdit = (product) => async (dispatch) => {
+export const  productEdit = (product) => async (dispatch) => {
   if (!product || !product.id) {
     console.error("Invalid product data provided to productEdit.");
     return;
@@ -70,7 +70,7 @@ export const productEdit = (product) => async (dispatch) => {
     }
 
     const data = await response.json();
-    dispatch({ type: PRODUCT_EDIT, payload: data }); // Dispatch the updated product to the store
+    await dispatch({ type: PRODUCT_EDIT, payload: product }); // Dispatch the updated product to the store
     return data; // Return the updated product for further use
   } catch (error) {
     console.error("Error in productEdit:", error);
