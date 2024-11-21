@@ -88,22 +88,6 @@ export const removeFromCartThunk = (product, userId) => async (dispatch) => {
   }
 };
 
-export const updateQuantityThunk = (productId, quantity, userId) => async (dispatch) => {
-  try {
-    const res = await fetch(`/api/users/${userId}/cart/${productId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantity }),
-    });
-
-    if (!res.ok) throw new Error("Failed to update cart item quantity");
-
-    const data = await res.json();
-    await dispatch(updateQuantity(productId, data.quantity));
-  } catch (error) {
-    console.error("Error updating cart item quantity:", error);
-  }
-};
 
 export const clearCartThunk = (userId) => async (dispatch) => {
   try {
