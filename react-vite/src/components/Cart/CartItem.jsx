@@ -18,7 +18,7 @@ function CartItem({ item }) {
     const fetchData = async () => {
     const newQuantity = parseInt(e.target.value, 10);
     if (newQuantity > 0) {
-      await dispatch(updateQuantityThunk(item.id, newQuantity)); // Update quantity using thunk
+      await dispatch(updateQuantityThunk(item.id, newQuantity, user.id)); // Update quantity using thunk
     }
   }
   fetchData()
